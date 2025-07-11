@@ -3,7 +3,7 @@ from tkinter import Menu, TclError
 from tkinter.messagebox import showerror
 from ctypes import windll
 from menu_functions.font_changer import FontMenu
-from note_tab import TabsMenu
+from forms.day_params_form import TabsMenu
 from menu_functions.diagnosis import DiagnosisMenu
 from menu_functions.analysis import AnalysisMenu
 

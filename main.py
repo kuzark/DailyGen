@@ -12,9 +12,9 @@ import sys
 #import html_manager as hm
 #import add_funcs as af
 #import dnevnic_generator as dg
-from note_tab import NoteBook
 from settings import Settings
-from select_form import SelectForm
+from forms.day_params_form import NoteBook
+from forms.treatment_form import TreatmentForm
 from menus import MainMenu, ContextMenu
 from button_functions.generator import Generator
 from button_functions.html_conventer import HTMLConventer
@@ -122,9 +122,9 @@ class DnevnicApp(Tk):
             lambda event: self.context_menu.post(event.x_root, event.y_root)
         )
 
-        # Форма выбора заголовков для выделения
-        self.select_form = SelectForm(self)
-        self.select_form.grid(
+        # Форма выбора схемы лечения
+        self.treatment_form = TreatmentForm(self)
+        self.treatment_form.grid(
             row=2, column=0, columnspan=2, padx=10, pady=5, sticky=EW
         )
 

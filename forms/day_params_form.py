@@ -5,7 +5,7 @@ from datetime import datetime
 from settings import Settings
 
 class TabsMenu(Menu):
-    '''Меню 'Вкладки' задает количество вкладок'''
+    '''Меню 'Вкладки' задает количество вкладок с характеристиками дня'''
     def __init__(self, app):
         super().__init__()
         # Определение переменной для хранения количества вкладок 
@@ -30,7 +30,7 @@ class TabsMenu(Menu):
     
 
 class NoteBook(ttk.Notebook):
-    '''Ноутбук'''
+    '''Ноутбук с вкладками с характеристиками дня'''
     def __init__(self, app):
         super().__init__(app)
         # Определение списка для хранения экземпляров вкладок
@@ -42,7 +42,7 @@ class NoteBook(ttk.Notebook):
 
     
     def tabs_create(self, tabs_num):
-        '''Создание вкладок'''
+        '''Создание вкладок с характеристиками дня'''
         # Определение необходимости добавить или удалить вкладки
         selected_tabs_num = tabs_num
         current_tabs_num = self.index('end')
@@ -84,7 +84,7 @@ class NoteBook(ttk.Notebook):
 
 
 class TabFrame(ttk.Frame):
-    '''Вкладка'''
+    '''Вкладка с характеристиками дня'''
 
     def __init__(self, notebook, settings):
         super().__init__(notebook, relief=SUNKEN)
