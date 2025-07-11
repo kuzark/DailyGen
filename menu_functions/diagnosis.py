@@ -34,7 +34,7 @@ class DiagnosisMenu(Menu):
         '''Добавляет диагноз и второе обоснование диагноза'''
         # Добавление диагноза
         self.text_handler.text_add(
-            content='Диагноз:',
+            content='\nДиагноз:\n',
             tag='subtitle'
         )
         

@@ -64,7 +64,7 @@ class AnalysisMenu(Menu):
 
     def _add_analysis_in_work(self):
         '''Добавляет указание, что анализы в работе'''
-        content = self._analysis_listing() + ' в работе.'
+        content = self._analysis_listing() + ' в работе.\n'
         self.text_handler.text_add(content, tag='main')
 
 
@@ -240,7 +240,7 @@ class AnalysisHandler:
             self.conclusion.append(
                 'все показатели в пределах референсных значений'
             )
-        self.conclusion = ', '.join(self.conclusion) + '.'
+        self.conclusion = ', '.join(self.conclusion) + '.' + '\n'
 
         # Вывод сообщения о наличии ошибок
         if tabs_err > 0:
@@ -447,7 +447,7 @@ class AnalysisHandler:
 
         # Ввод и форматирование заголовка вывода результатов анализов
         self.text_handler.text_add(
-            content='\n' + 'При обследовании:',  
+            content='\nПри обследовании:',  
             tag='main_underlined'
         )
         
