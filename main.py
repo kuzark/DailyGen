@@ -87,7 +87,7 @@ class DnevnicApp(Tk):
         # Область для работы с текстом
         self.text = ScrolledText(self, width=110, wrap='word', undo=True)
         self.text.grid(
-            row=0, column=2, rowspan=4, columnspan=3, pady=6, sticky=NS
+            row=0, column=2, rowspan=5, columnspan=3, pady=6, sticky=NS
         )
         
         # Установка шрифтов
@@ -128,18 +128,21 @@ class DnevnicApp(Tk):
             row=2, column=0, columnspan=2, padx=10, pady=5, sticky=EW
         )
 
+        # Установка пустого фрейма
+        ttk.Frame(height=175).grid(row=3)
+
         # Кнопки главной панели
         ttk.Button(
             text="Сгенерировать",
             command=lambda: Generator(self)
-        ).grid(row=3, column=0, padx=10, pady=10)
+        ).grid(row=4, column=0, padx=10, pady=10)
 
         ttk.Button(
             text='Сохранить',
             command=lambda: HTMLConventer(self.text)
-        ).grid(row=3, column=1, padx=10, pady=10)
+        ).grid(row=4, column=1, padx=10, pady=10)
 
-
+        
 # Запуск цикла событий приложения
 if __name__ == '__main__':
     app = DnevnicApp()

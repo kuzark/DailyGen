@@ -12,7 +12,6 @@ class TreatmentForm(ttk.Frame):
         
         # Словарь с настройками расположения элементов
         elem_grid = {
-            'column': 0,
             'padx': 10,
             'pady': 5,
             'sticky': W
@@ -30,10 +29,36 @@ class TreatmentForm(ttk.Frame):
             font='TkDefaultFont 10 bold italic'
         ).grid(row=0, column=0, sticky=W, **settings.margins)
 
-        # Чек боксы выбора вариантов для выделения в тексте
+        # Кнопки выбора схемы лечения
         row = 1
-        for paragraph_name in settings.paragraph_names.keys():
-            ttk.Checkbutton(
-                self, text=paragraph_name,
+        for treatment in settings.treatment.keys():
+            ttk.Radiobutton(
+                self, text=treatment, 
+                value=treatment, 
+                variable=self.treatment_var,
+                command=self._activate_ribavirin
             ).grid(row=row, **elem_grid)
             row += 1
+        
+        # Интерфейс выбора количества капсул Рибавирина
+        ttk.Label(self, text='Рибавирин (капсулы):', width=22).grid(
+            row=row, column=0, **elem_grid
+        )
+        self.spin_rib = ttk.Spinbox(
+            self,
+            from_=1.0,
+            to=7.0,
+            textvariable=self.ribavirin_count,
+            width=3,
+            state='disabled'
+        )
+        self.spin_rib.grid(row=row, column=1, **elem_grid)
+
+    
+    def _activate_ribavirin(self):
+        '''Активация и деактивация спинбокса Рибавирина'''
+        if self.treatment_var.get() == 'Эпклюза':
+            self.spin_rib.config(state='normal')
+        else:
+            self.spin_rib.config(state='disabled')
+
