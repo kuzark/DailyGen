@@ -1,5 +1,6 @@
 import random
 from settings import Settings
+from handlers.text_handler import TextHandler
 
 class Generator:
     '''Класс для генерации дневника'''
@@ -14,6 +15,8 @@ class Generator:
         self.gypertonic = app.enabled_gypertonic.get()
         # Инициализация настроек
         self.settings = Settings()
+        # Инициализация обработчика текста
+        text_handler = TextHandler(app.text)
         
         # Генерация дневника
         self._generate_title()
@@ -31,8 +34,8 @@ class Generator:
         app.text.tag_add('title' ,'1.0', '2.0')
 
         # Форматирование дневника
-        self._empty_strings_cutter(app.text)
-        self._paragraphs_selector(app.text, app.select_form)
+        text_handler.empty_strings_cutter()
+        text_handler.paragraphs_selector()
 
         
     def _generate_title(self):
@@ -141,39 +144,3 @@ class Generator:
 
         # Добавление пустых строк в конец
         self.dnevnic = self.dnevnic + 2 * '\n'
-
-    
-    def _empty_strings_cutter(self, text):
-        '''Убирает лишние пустые строки'''
-        pos = text.index('end')
-        if pos[1] == '.':
-            for i in range(1, int(pos[0])):
-                if text.get(f'{str(i)}.0', f'{str(i)}.1') == '':
-                    for _ in range(i + 1, int(pos[0])):
-                        if text.get(f'{str(i + 1)}.0', f'{str(i + 1)}.1') == '':
-                            text.delete(f'{str(i + 1)}.0', f'{str(i + 2)}.0')
-                        else:
-                            break
-        else:
-            for i in range(1, int(pos[:2])):
-                if text.get(f'{str(i)}.0', f'{str(i)}.1') == '':
-                    for _ in range(i + 1, int(pos[:2])):
-                        if text.get(f'{str(i + 1)}.0', f'{str(i + 1)}.1') == '':
-                            text.delete(f'{str(i + 1)}.0', f'{str(i + 2)}.0')
-                        else:
-                            break
-    
-
-    def _paragraphs_selector(self, text, select_form):
-        '''Выделяет выбранные абзацы'''
-        i = 0
-        for value in self.settings.paragraph_names.values():
-            if select_form.enabled_vars[i].get() == 1:
-                pos = text.search(value, '1.0', stopindex='end')
-                if pos:
-                    if pos[1] == '.':
-                        end = pos[0] + '.' + str(len(value))
-                    else:
-                        end = pos[:2] + '.' + str(len(value))
-                    text.tag_add('subtitle', pos, end)
-            i += 1
