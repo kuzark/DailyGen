@@ -7,11 +7,6 @@ from pathlib import Path
 import sys
 
 # Мои модули
-#import text_format as tf
-#import copy_paste_undo_funcs as cpuf
-#import html_manager as hm
-#import add_funcs as af
-#import dnevnic_generator as dg
 from settings import Settings
 from forms.day_params_form import NoteBook
 from forms.treatment_form import TreatmentForm
