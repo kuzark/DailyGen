@@ -9,6 +9,8 @@ class Generator:
         self.tabs = app.notebook.tab_frames
         # Индекс текущей вкладки
         self.note_index = app.notebook.index(app.notebook.select())
+        # Экземпляр формы для выбора схемы лечения
+        self.treatment_form = app.treatment_form
         # Текст из текстового поля
         self.dnevnic = app.text.get('1.0', 'end')
         # Проверка наличия гипертонической болезни
@@ -25,6 +27,7 @@ class Generator:
         self._generate_RR()
         self._generate_HR()
         self._generate_BP()
+        self._generate_treatment()
         self._generate_signature()
 
         # Вставка сгенерированного дневника
@@ -123,6 +126,19 @@ class Generator:
             self.dnevnic[idx + 3:idx + 9], pressure, 1
         )
 
+
+    def _generate_treatment(self):
+        '''Генерация схемы лечения'''
+        chosen_treatment = self.treatment_form.treatment_var.get()
+        for treatment in self.settings.treatment.values():
+            for key in treatment.keys():
+                if self.dnevnic.find(treatment[key]) != -1:
+                    idx = self.dnevnic.find(treatment[key])
+                    self.dnevnic = self.dnevnic.replace(
+                        self.dnevnic[idx:idx + len(treatment[key])],
+                        self.settings.treatment[chosen_treatment][key], 1
+                    )
+    
     
     def _generate_signature(self):
         '''Генерация строки для подписи врача'''
