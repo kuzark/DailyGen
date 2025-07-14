@@ -180,7 +180,8 @@ class TabFrame(ttk.Frame):
             from_=1.0,
             to=12.0,
             textvariable=self.day_week_num,
-            width=3
+            width=3,
+            state='readonly'
         ).grid(row=5, column=1, **notes_elem_grid)
         
         # Интерфейс выбора врача
