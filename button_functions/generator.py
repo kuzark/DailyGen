@@ -132,16 +132,20 @@ class Generator:
         '''Генерация схемы лечения'''
         epclusa = self.settings.treatment['Эпклюза']['recomendation']
         pattern = self.settings.treatment['Эпклюза + РБВ']['recomend_pattern']
-        ribavirin = self.settings.treatment['Эпклюза + РБВ']['recomend_f']
+        ribavirin = self.settings.treatment['Эпклюза + РБВ']['recomendation']
         # Получение выбранного пользователем лечения
         chosen_treatment = self.treatment_form.treatment_var.get()
         
         # Запуск цикла перебора схем лечения
+        fragment_have_founded = False
         for scheme, treatment in self.settings.treatment.items():
-
+            # Если фрагмент найден, остановка цикла
+            if fragment_have_founded == True:
+                break
             # Поиск строки недели
             key = 'week'
             if self.dnevnic.find(treatment[key]) != -1:
+                fragment_have_founded = True
                 start_idx = self.dnevnic.find(treatment[key])
             
                 # Замена строки недели
@@ -157,13 +161,13 @@ class Generator:
             # Поиск строки рекомендаций
             key = 'recomendation'
             if self.dnevnic.find(treatment[key]) != -1:
+                fragment_have_founded = True
                 # Вычисляем начало строки найденного фрагмента
                 start_idx = self.dnevnic.find(treatment[key])
                 
                 # Если нашли Эпклюзу, проверяем наличие Рибавирина
                 if treatment[key] == epclusa:
                     match = re.search(pattern, self.dnevnic)
-                    print(match)
                     if match:
                         # Если нашли Рибавирин, 
                         # вычисляем индекс окончания рекомендаций
