@@ -4,7 +4,6 @@ from tkinter import ttk
 from tkinter.scrolledtext import ScrolledText
 from tkinter.messagebox import askyesno
 from pathlib import Path
-import sys
 
 # Мои модули
 from settings import Settings

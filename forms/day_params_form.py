@@ -197,7 +197,8 @@ class TabFrame(ttk.Frame):
             self,
             values=settings.doctors,
             width=15,
-            textvariable=self.day_selected_doctor
+            textvariable=self.day_selected_doctor,
+            state='readonly'
         )
         self.day_doctors_box.grid(
             row=6,

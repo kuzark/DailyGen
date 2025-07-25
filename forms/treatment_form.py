@@ -41,21 +41,18 @@ class TreatmentForm(ttk.Frame):
             row += 1
         
         # Интерфейс активации и выбора количества капсул Рибавирина
-        self.enabled_ribavirin = IntVar()
-        self.check_rib = ttk.Checkbutton(
+        self.label_rib = ttk.Label(
             self, 
             text='Рибавирин (капсулы):', 
             width=22,
-            variable=self.enabled_ribavirin,
             state='disabled',
-            command=self._activate_spin_caps
             )
-        self.check_rib.grid(
+        self.label_rib.grid(
             row=row, column=0, **elem_grid
         )
         self.spin_rib = ttk.Spinbox(
             self,
-            from_=1.0,
+            from_=3.0,
             to=7.0,
             textvariable=self.ribavirin_count,
             width=3,
@@ -66,18 +63,11 @@ class TreatmentForm(ttk.Frame):
     
     def _activate_ribavirin(self):
         '''Активация и деактивация Рибавирина'''
-        if self.treatment_var.get() == 'Эпклюза':
-            self.check_rib.config(state='normal')
-        else:
-            self.check_rib.config(state='disabled')
-            self.enabled_ribavirin.set(value=0)
-            self._activate_spin_caps()
-
-    
-    def _activate_spin_caps(self):
-        '''Активация спинбокса для выбора количества капсул Рибавирина'''
-        if self.enabled_ribavirin.get():
+        if self.treatment_var.get() == 'Эпклюза + РБВ':
+            self.label_rib.config(state='normal')
             self.spin_rib.config(state='readonly')
         else:
+            self.label_rib.config(state='disabled')
             self.spin_rib.config(state='disabled')
+
 
