@@ -182,8 +182,9 @@ class Generator:
                 # Замена рекомендаций
                 # Если выбрана схема с Рибавирином
                 if chosen_treatment == 'Эпклюза + РБВ':
-                    morning = 3
-                    evening = 2
+                    # Расчет разовых доз Рибавирина
+                    morning, evening = self.ribavirin_doses_calculate()
+                    # Замена строки
                     self.dnevnic = self.dnevnic.replace(
                         self.dnevnic[start_idx:start_idx + len(treatment[key])],
                         ribavirin.format(morning=morning, evening=evening), 1
@@ -195,6 +196,14 @@ class Generator:
                         self.dnevnic[start_idx:start_idx + len(treatment[key])],
                         self.settings.treatment[chosen_treatment][key], 1
                     )
+
+
+    def ribavirin_doses_calculate(self):
+        '''Расчитывает утреннюю и вечернюю дозу Рибавирина'''
+        capsuls = self.treatment_form.ribavirin_count.get()
+        morning = capsuls // 2
+        evening = morning + capsuls % 2
+        return morning, evening
 
 
     def _generate_signature(self):
