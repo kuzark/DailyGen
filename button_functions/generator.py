@@ -130,53 +130,69 @@ class Generator:
 
     def _generate_treatment(self):
         '''Генерация схемы лечения'''
-        for treatment in self.settings.treatment.values():
-            for key in treatment.keys():
-                if key == 'recomend_f':
-                    continue
-                if key == 'recomend_pattern':
-                    if self.dnevnic.find(
-                        self.settings.treatment['Эпклюза']['recomendation']
-                    ) != -1:
-                        idx = self.dnevnic.find(
-                            self.settings.treatment['Эпклюза']['recomendation']
-                        )
-                        match = re.search(treatment[key], self.dnevnic)
-                        if match:
-                            self._add_treatment(treatment, key, idx)
-                else:
-                    if self.dnevnic.find(treatment[key]) != -1:
-                        idx = self.dnevnic.find(treatment[key])
-                        self._add_treatment(treatment, key, idx)
-            
-
-    
-    def _add_treatment(self, treatment, key, idx):
+        epclusa = self.settings.treatment['Эпклюза']['recomendation']
+        pattern = self.settings.treatment['Эпклюза + РБВ']['recomend_pattern']
+        ribavirin = self.settings.treatment['Эпклюза + РБВ']['recomend_f']
+        # Получение выбранного пользователем лечения
         chosen_treatment = self.treatment_form.treatment_var.get()
-        if chosen_treatment == 'Эпклюза + РБВ' and key != 'week':
-            morning = 3
-            evening = 2
-            self.dnevnic = self.dnevnic.replace(
-                self.dnevnic[idx:idx + len(treatment[key])],
-                self.settings.treatment[chosen_treatment]['recomend_f'].format(
-                    morning=morning, evening=evening
-                ), 1
-            )
-        else:
-            if key == 'recomend_pattern':
+        
+        # Запуск цикла перебора схем лечения
+        for scheme, treatment in self.settings.treatment.items():
+
+            # Поиск строки недели
+            key = 'week'
+            if self.dnevnic.find(treatment[key]) != -1:
+                start_idx = self.dnevnic.find(treatment[key])
+            
+                # Замена строки недели
                 self.dnevnic = self.dnevnic.replace(
-                    self.dnevnic[idx:idx + len(treatment[key])],
-                    self.settings.treatment[chosen_treatment]['recomendation'], 
-                    1
-                )
-            else:
-                self.dnevnic = self.dnevnic.replace(
-                    self.dnevnic[idx:idx + len(treatment[key])],
+                    self.dnevnic[start_idx:start_idx + len(treatment[key])],
                     self.settings.treatment[chosen_treatment][key], 1
                 )
 
-    
-    
+            # Пропускаем схему лечения 'Эпклюза + РБВ'
+            if scheme == 'Эпклюза + РБВ':
+                break
+
+            # Поиск строки рекомендаций
+            key = 'recomendation'
+            if self.dnevnic.find(treatment[key]) != -1:
+                # Вычисляем начало строки найденного фрагмента
+                start_idx = self.dnevnic.find(treatment[key])
+                
+                # Если нашли Эпклюзу, проверяем наличие Рибавирина
+                if treatment[key] == epclusa:
+                    match = re.search(pattern, self.dnevnic)
+                    print(match)
+                    if match:
+                        # Если нашли Рибавирин, 
+                        # вычисляем индекс окончания рекомендаций
+                        end_idx = match.end()
+                        
+                        # Замена рекомендаций
+                        self.dnevnic = self.dnevnic.replace(
+                            self.dnevnic[start_idx:end_idx],
+                            self.settings.treatment[chosen_treatment][key], 1
+                        )
+
+                # Замена рекомендаций
+                # Если выбрана схема с Рибавирином
+                if chosen_treatment == 'Эпклюза + РБВ':
+                    morning = 3
+                    evening = 2
+                    self.dnevnic = self.dnevnic.replace(
+                        self.dnevnic[start_idx:start_idx + len(treatment[key])],
+                        ribavirin.format(morning=morning, evening=evening), 1
+                    )
+                
+                # Если иная схема лечения
+                else:
+                    self.dnevnic = self.dnevnic.replace(
+                        self.dnevnic[start_idx:start_idx + len(treatment[key])],
+                        self.settings.treatment[chosen_treatment][key], 1
+                    )
+
+
     def _generate_signature(self):
         '''Генерация строки для подписи врача'''
         # Замена даты
