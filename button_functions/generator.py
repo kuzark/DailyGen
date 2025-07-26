@@ -76,10 +76,9 @@ class Generator:
         '''Генерация периода недели'''
         periods = self.tabs[self.note_index].periods
         for period in periods:
-            if self.dnevnic.find(period) != -1:
-                idx = self.dnevnic.find(period)
+            if period in self.dnevnic:
                 self.dnevnic = self.dnevnic.replace(
-                    self.dnevnic[idx:idx + len(period)], 
+                    period,
                     self.tabs[self.note_index].day_week_period.get(), 1
                 )
     
