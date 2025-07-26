@@ -10,8 +10,10 @@ class Generator:
         self.tabs = app.notebook.tab_frames
         # Индекс текущей вкладки
         self.note_index = app.notebook.index(app.notebook.select())
-        # Экземпляр формы для выбора схемы лечения
+        # Экземпляр формы выбора схемы лечения пользователем
         self.treatment_form = app.treatment_form
+        # Схема лечения, выбранная пользователем
+        self.chosen_treatment = app.treatment_form.treatment_var.get()
         # Текст из текстового поля
         self.dnevnic = app.text.get('1.0', 'end')
         # Проверка наличия гипертонической болезни
@@ -28,7 +30,8 @@ class Generator:
         self._generate_RR()
         self._generate_HR()
         self._generate_BP()
-        self._generate_treatment()
+        self._generate_week_treatment()
+        self._generate_recomendation_treatment()
         self._generate_signature()
 
         # Вставка сгенерированного дневника
@@ -128,74 +131,58 @@ class Generator:
         )
 
 
-    def _generate_treatment(self):
-        '''Генерация схемы лечения'''
+    def _generate_week_treatment(self):
+        '''Замена строки недели со схемой лечения'''
+        # Ключ к записи схемы лечения для недели
+        key = 'week'
+
+        # Запуск цикла перебора схем лечения
+        for scheme in self.settings.treatment.values():
+            # Если схема найдена - замена на выбранную пользователем
+            if scheme[key] in self.dnevnic:
+                self.dnevnic = self.dnevnic.replace(
+                    scheme[key],
+                    self.settings.treatment[self.chosen_treatment][key], 1
+                )
+                break
+
+
+    def _generate_recomendation_treatment(self):
+        '''Замена строки рекомендаций лечения'''
+        # Ключ к записи схемы лечения для рекомендаций
+        key = 'recomendation'
+        
+        # Схема выбранная пользователем
+        new_scheme = self.settings.treatment[self.chosen_treatment][key]
+
+        # Строка с рекомендациями схемы лечения с Эпклюзой
         epclusa = self.settings.treatment['Эпклюза']['recomendation']
-        pattern = self.settings.treatment['Эпклюза + РБВ']['recomend_pattern']
-        ribavirin = self.settings.treatment['Эпклюза + РБВ']['recomendation']
-        # Получение выбранного пользователем лечения
-        chosen_treatment = self.treatment_form.treatment_var.get()
+        
+        # Если выбрана схема лечения Эпклюза + РБВ
+        if self.chosen_treatment == 'Эпклюза + РБВ':
+            morning, evening = self.ribavirin_doses_calculate()
+            new_scheme = new_scheme.format(morning=morning, evening=evening)
         
         # Запуск цикла перебора схем лечения
-        fragment_have_founded = False
-        for scheme, treatment in self.settings.treatment.items():
-            # Если фрагмент найден, остановка цикла
-            if fragment_have_founded == True:
-                break
-            # Поиск строки недели
-            key = 'week'
-            if self.dnevnic.find(treatment[key]) != -1:
-                fragment_have_founded = True
-                start_idx = self.dnevnic.find(treatment[key])
-            
-                # Замена строки недели
-                self.dnevnic = self.dnevnic.replace(
-                    self.dnevnic[start_idx:start_idx + len(treatment[key])],
-                    self.settings.treatment[chosen_treatment][key], 1
-                )
+        for scheme in self.settings.treatment.values():
+            # Если схема найдена - замена на выбранную пользователем
+            if scheme[key] in self.dnevnic:
+                if scheme[key] == epclusa:
+                    # Если найдена Эпклюза - проверка наличия строки Рибавирин
+                    # и ее удаление
+                    self._search_delete_ribavirin()
 
-            # Пропускаем схему лечения 'Эпклюза + РБВ'
-            if scheme == 'Эпклюза + РБВ':
+                self.dnevnic = self.dnevnic.replace(scheme[key], new_scheme, 1)
                 break
 
-            # Поиск строки рекомендаций
-            key = 'recomendation'
-            if self.dnevnic.find(treatment[key]) != -1:
-                fragment_have_founded = True
-                # Вычисляем начало строки найденного фрагмента
-                start_idx = self.dnevnic.find(treatment[key])
-                
-                # Если нашли Эпклюзу, проверяем наличие Рибавирина
-                if treatment[key] == epclusa:
-                    match = re.search(pattern, self.dnevnic)
-                    if match:
-                        # Если нашли Рибавирин, 
-                        # вычисляем индекс окончания рекомендаций
-                        end_idx = match.end()
-                        
-                        # Замена рекомендаций
-                        self.dnevnic = self.dnevnic.replace(
-                            self.dnevnic[start_idx:end_idx],
-                            self.settings.treatment[chosen_treatment][key], 1
-                        )
-
-                # Замена рекомендаций
-                # Если выбрана схема с Рибавирином
-                if chosen_treatment == 'Эпклюза + РБВ':
-                    # Расчет разовых доз Рибавирина
-                    morning, evening = self.ribavirin_doses_calculate()
-                    # Замена строки
-                    self.dnevnic = self.dnevnic.replace(
-                        self.dnevnic[start_idx:start_idx + len(treatment[key])],
-                        ribavirin.format(morning=morning, evening=evening), 1
-                    )
-                
-                # Если иная схема лечения
-                else:
-                    self.dnevnic = self.dnevnic.replace(
-                        self.dnevnic[start_idx:start_idx + len(treatment[key])],
-                        self.settings.treatment[chosen_treatment][key], 1
-                    )
+    
+    def _search_delete_ribavirin(self):
+        '''Поиск и удаление строки с Рибавирином'''
+        self.dnevnic = re.sub(
+            self.settings.treatment['Эпклюза + РБВ']['recomend_pattern'],
+            '',
+            self.dnevnic
+        )
 
 
     def ribavirin_doses_calculate(self):

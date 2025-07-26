@@ -29,8 +29,12 @@ class MainMenu(Menu):
         self.add_cascade(label='Диагноз', menu=DiagnosisMenu(app))
         self.add_separator()
         self.add_cascade(label='Анализы', menu=AnalysisMenu(app))
+        self.add_separator()
+        self.add_cascade(label='Конструктор')
+        self.add_separator()
+        self.add_cascade(label='Шаблоны')
 
-    
+
     def _undo(self):
         '''Функция отмены изменений'''
         try:
