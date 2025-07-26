@@ -56,16 +56,17 @@ class Generator:
             long_str
         ]
         
-        # Генерация заголовка
+        # Замена заголовка
         founded_title = False
         for title in titles:
-            if self.dnevnic.find(title) != -1:
-                idx = self.dnevnic.find(title)
+            if title in self.dnevnic:
                 self.dnevnic = self.dnevnic.replace(
-                    self.dnevnic[:idx + len(title)], 
+                    title,
                     self.tabs[self.note_index].day_dnevnic_type.get(), 1
                 )
                 founded_title = True
+
+        # Если заголовок не найден, вставка заголовка
         if not founded_title:
             self.dnevnic = self.tabs[self.note_index].day_dnevnic_type.get() \
                 + 2 * '\n' + self.dnevnic
