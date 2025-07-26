@@ -98,20 +98,22 @@ class Generator:
 
     def _generate_RR(self):
         '''Генерация ЧДД'''
-        rr = str(random.randint(16, 20))
-        idx = self.dnevnic.find('в мин')
-        self.dnevnic = self.dnevnic.replace(
-            self.dnevnic[idx - 3:idx + 5], rr + ' в мин', 1
-        )
+        if 'в мин' in self.dnevnic:
+            rr = str(random.randint(16, 20))
+            idx = self.dnevnic.find('в мин')
+            self.dnevnic = self.dnevnic.replace(
+                self.dnevnic[idx - 3:idx + 5], rr + ' в мин', 1
+            )
 
     
     def _generate_HR(self):
         '''Генерация ЧСС'''
-        pulse = str(random.randint(68, 90))
-        idx = self.dnevnic.find('/мин')
-        self.dnevnic = self.dnevnic.replace(
-            self.dnevnic[idx - 2:idx + 1], pulse + '/', 2
-        )
+        if '/мин' in self.dnevnic:
+            pulse = str(random.randint(68, 90))
+            idx = self.dnevnic.find('/мин')
+            self.dnevnic = self.dnevnic.replace(
+                self.dnevnic[idx - 2:idx + 1], pulse + '/', 2
+            )
 
     
     def _generate_BP(self):
@@ -125,10 +127,11 @@ class Generator:
             pressure = f'{str(random.randrange(120, 145, 5))}/'
             pressure += f'{str(random.randrange(80, 95, 5))}'
         # Вставка сгенерированного давления в дневник
-        idx = self.dnevnic.find('АД')
-        self.dnevnic = self.dnevnic.replace(
-            self.dnevnic[idx + 3:idx + 9], pressure, 1
-        )
+        if 'АД' in self.dnevnic:
+            idx = self.dnevnic.find('АД')
+            self.dnevnic = self.dnevnic.replace(
+                self.dnevnic[idx + 3:idx + 9], pressure, 1
+            )
 
 
     def _generate_week_treatment(self):
