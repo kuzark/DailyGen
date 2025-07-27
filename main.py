@@ -12,6 +12,7 @@ from forms.treatment_form import TreatmentForm
 from menus import MainMenu, ContextMenu
 from button_functions.generator import Generator
 from button_functions.html_conventer import HTMLConventer
+from update import UpdateApp
 
 
 class DnevnicApp(Tk):
@@ -143,5 +144,8 @@ class DnevnicApp(Tk):
         
 # Запуск цикла событий приложения
 if __name__ == '__main__':
+    # Проверка наличия обновлений
+    UpdateApp()
+    # Запуск приложения
     app = DnevnicApp()
     app.mainloop()
