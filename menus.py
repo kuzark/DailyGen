@@ -1,6 +1,6 @@
 from pyperclip import paste, copy
 from tkinter import Menu, TclError
-from tkinter.messagebox import showerror
+from tkinter.messagebox import showerror, askyesnocancel
 from ctypes import windll
 from menu_functions.font_changer import FontMenu
 from forms.day_params_form import TabsMenu
@@ -17,10 +17,7 @@ class MainMenu(Menu):
         self.add_separator()
         self.add_cascade(label='Назад', command=self._undo)
         self.add_separator()
-        self.add_cascade(
-            command= lambda: app.text.delete('1.0', 'end'), 
-            label='Очистить все'
-        )
+        self.add_cascade(command=self._clear_all, label='Очистить все')
         self.add_separator()
         self.add_cascade(label='Шрифт', menu=FontMenu(app.text))
         self.add_separator()
@@ -33,6 +30,20 @@ class MainMenu(Menu):
         self.add_cascade(label='Конструктор')
         self.add_separator()
         self.add_cascade(label='Шаблоны')
+
+
+    def _clear_all(self):
+        '''Очищает текстовое поле полностью'''
+        # Запрос подтверждения действия
+        content = 'Вы уверены, что хотите полностью очистить тескстовое поле? '
+        content += 'Несохраненные данные будут утеряны.'
+        answer = askyesnocancel(
+            title='Подтверждение', 
+            message=content,
+            icon='warning')
+        if answer:
+            # Полная очистка текстового поля
+            self.app.text.delete('1.0', 'end')
 
 
     def _undo(self):

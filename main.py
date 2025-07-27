@@ -2,7 +2,7 @@ from tkinter import Tk, IntVar
 from tkinter import FALSE, EW, SUNKEN, W, NS
 from tkinter import ttk
 from tkinter.scrolledtext import ScrolledText
-from tkinter.messagebox import askyesno
+from tkinter.messagebox import askyesnocancel
 from pathlib import Path
 
 # Мои модули
@@ -45,7 +45,11 @@ class DnevnicApp(Tk):
         result_file = Path('result.html')
         content = 'Вы уверены, что хотите закрыть программу? '
         content += 'Несохраненные данные будут утеряны.'
-        answer = askyesno(title='Подтверждение', message=content)
+        answer = askyesnocancel(
+            title='Подтверждение', 
+            message=content,
+            icon='warning'
+        )
         if answer:
             # Удаление файла при закрытии главного окна
             if result_file.exists():
