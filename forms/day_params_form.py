@@ -155,7 +155,7 @@ class TabFrame(ttk.Frame):
         )
 
         # Интерфейс выбора периода недели
-        ttk.Label(self, text='Период недели:', width=22).grid(
+        ttk.Label(self, text='Период недели:', width=26).grid(
             row=4, column=0, **notes_elem_grid
         )
 

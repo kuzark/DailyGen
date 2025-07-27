@@ -5,7 +5,7 @@ class Settings:
     def __init__(self):
         
         # Максимальное и начальное количество вкладок
-        self.max_tabs = 5
+        self.max_tabs = 7
         self.start_num_tabs = 1
 
         # Отступы
