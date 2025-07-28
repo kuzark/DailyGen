@@ -44,7 +44,7 @@ class TreatmentForm(ttk.Frame):
         self.label_rib = ttk.Label(
             self, 
             text='Рибавирин (капсулы):', 
-            width=22,
+            width=26,
             state='disabled',
             )
         self.label_rib.grid(

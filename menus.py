@@ -6,6 +6,7 @@ from menu_functions.font_changer import FontMenu
 from forms.day_params_form import TabsMenu
 from menu_functions.diagnosis import DiagnosisMenu
 from menu_functions.analysis import AnalysisMenu
+from menu_functions.constructor.constructor import ConstructorWindow
 
 
 class MainMenu(Menu):
@@ -27,7 +28,10 @@ class MainMenu(Menu):
         self.add_separator()
         self.add_cascade(label='Анализы', menu=AnalysisMenu(app))
         self.add_separator()
-        self.add_cascade(label='Конструктор')
+        self.add_cascade(
+            label='Конструктор', 
+            command= lambda: ConstructorWindow(app)
+        )
         self.add_separator()
         self.add_cascade(label='Шаблоны')
 
