@@ -1,6 +1,7 @@
 import requests
 import sys
 from tkinter.messagebox import showerror, showinfo
+from pyperclip import copy
 
 class UpdateApp:
     '''Класс для проверки обновлениий приложения'''
@@ -38,8 +39,16 @@ class UpdateApp:
         '''Сравнивает версии, если полученная версия новее, 
         предлагает скачать по ссылке'''
         if self.latest_version != self.current_version:
+            
+            # Копирование ссылки в буфер обмена
+            copy(self.latest_release_url)
+
+            # Вывод сообщения о новой версии
             msg = f'Скачайте новую версию по ссылке: {self.latest_release_url}'
+            msg += '\nСсылка скопирована в буфер обмена'
             showinfo(title='Вышла новая версия', message=msg)
+            
+            # Выход из приложения
             sys.exit()
 
             
