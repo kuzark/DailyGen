@@ -4,6 +4,7 @@ from tkinter import ttk
 from settings import Settings
 from menu_functions.constructor.adders import Add
 from menu_functions.constructor.tabs import ComplaintTab
+from handlers.text_handler import TextHandler
 
 
 class ConstructorWindow(Toplevel):
@@ -13,6 +14,8 @@ class ConstructorWindow(Toplevel):
 
         # Инициализация класса для добавления элементов
         self.add = Add(app)
+        # Инициализация обработчика текста
+        self.text_handler = TextHandler(app.text)
 
         # Настройки окна
         self.title('Конструктор')
@@ -88,6 +91,9 @@ class ConstructorWindow(Toplevel):
         # Добавление жалоб
         if self.chosen_elements[1].get() == 1:
             self.add.add_complaints(self.note)
+        
+        # Форматирование собранных элементов
+        self.text_handler.paragraphs_selector()
 
         
 

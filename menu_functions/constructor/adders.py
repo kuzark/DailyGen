@@ -28,4 +28,3 @@ class Add:
 
         # Добавление текста в текстовое поле
         self.text_handler.text_add(content=content, tag='main')
-        self.text_handler.paragraphs_selector()

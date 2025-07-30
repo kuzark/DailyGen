@@ -1,7 +1,7 @@
 import requests
 import sys
 from tkinter.messagebox import showerror, showinfo
-from pyperclip import copy
+from webbrowser import open_new_tab
 
 class UpdateApp:
     '''Класс для проверки обновлениий приложения'''
@@ -14,7 +14,7 @@ class UpdateApp:
         self.releases_url += 'kuzark/DailyGen/releases/latest'
         
         # Получение последней версии и ссылки на релиз
-        self.latest_version, self.latest_release_url = self._get_latest_version()
+        self.latest_version, self.download_url = self._get_latest_version()
 
         # Проверка на совпадение версий
         self._check_update()
@@ -27,7 +27,7 @@ class UpdateApp:
             response = requests.get(self.releases_url, timeout=10)
             response.raise_for_status()
             data = response.json()
-            return data['tag_name'], data['html_url']
+            return data['tag_name'], data['assets'][0]['browser_download_url']
         except requests.RequestException as err:
             # При возниконовении ошибки вывод окна с ошибкой
             err_msg = f'Ошибка! Код: {err}'
@@ -39,14 +39,15 @@ class UpdateApp:
         '''Сравнивает версии, если полученная версия новее, 
         предлагает скачать по ссылке'''
         if self.latest_version != self.current_version:
-            
-            # Копирование ссылки в буфер обмена
-            copy(self.latest_release_url)
 
             # Вывод сообщения о новой версии
-            msg = f'Скачайте новую версию по ссылке: {self.latest_release_url}'
-            msg += '\nСсылка скопирована в буфер обмена'
+            msg = f'Доступна новая версия программы {self.latest_version}'
+            msg += '\nСтраница для скачивания откроется автоматически после '
+            msg += 'того, как закроете сообщение.'
             showinfo(title='Вышла новая версия', message=msg)
+
+            # Открытие браузера со страницей для скачивания новой версии
+            open_new_tab(self.download_url)
             
             # Выход из приложения
             sys.exit()
