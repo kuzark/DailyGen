@@ -3,7 +3,7 @@ from tkinter import SUNKEN, EW, W
 from tkinter import ttk
 from settings import Settings
 from menu_functions.constructor.adders import Add
-from menu_functions.constructor.tabs import ComplaintsTab
+from menu_functions.constructor.tabs import ComplaintsTab, AnamnesisTab
 from handlers.text_handler import TextHandler
 
 
@@ -71,11 +71,19 @@ class ConstructorWindow(Toplevel):
     def _create_note(self):
         '''Создает ноутбук с вкладками характеристик элементов'''
         self.note = ttk.Notebook(self)
+        # Добавление вкладки 'Жалобы'
         if self.chosen_elements[1].get() == 1:
             # Переменная для хранения вкладки с жалобами
             self.complaints_tab = ComplaintsTab(self.note, self.margins)
             # Добавление вкладки в ноутбук
             self.note.add(self.complaints_tab, text='Жалобы')
+
+        # Добавление вкладки 'Анамнез'
+        if self.chosen_elements[2].get() == 1:
+            # Переменная для хранения вкладки с анамнезом
+            self.anamnesis_tab = AnamnesisTab(self.note, self.margins)
+            # Добавление вкладки в ноутбук
+            self.note.add(self.anamnesis_tab, text='Анамнез')
 
         self.note.grid(row=2, sticky=EW, **self.margins)
 
@@ -94,6 +102,10 @@ class ConstructorWindow(Toplevel):
         # Добавление жалоб
         if self.chosen_elements[1].get() == 1:
             self.add.add_complaints(self.complaints_tab)
+
+        # Добавление анамнеза
+        if self.chosen_elements[2].get() == 1:
+            self.add.add_anamnesis(self.anamnesis_tab)
         
         # Форматирование собранных элементов
         self.text_handler.paragraphs_selector()

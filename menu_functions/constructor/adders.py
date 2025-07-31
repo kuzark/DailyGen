@@ -27,3 +27,12 @@ class Add:
 
         # Добавление текста в текстовое поле
         self.text_handler.text_add(content=content, tag='main')
+
+    
+    def add_anamnesis(self, anamnesis_tab):
+        '''Добавление анамнеза'''
+        # Получение содержимого вкладки "Анамнез"
+        content = anamnesis_tab.anamnesis.get('1.0', 'end')
+
+        # Добавление текста в текстовое поле
+        self.text_handler.text_add(content=content, tag='main')
