@@ -1,6 +1,7 @@
 from tkinter import ttk
 from tkinter import SUNKEN
-from tkinter import Text
+from forms.text_space import TextSpace
+from handlers.text_handler import TextHandler
 
 
 class ConstructorTab(ttk.Frame):
@@ -10,8 +11,14 @@ class ConstructorTab(ttk.Frame):
         self.note = note
         self.margins = margins
 
+        # Настройки текстового поля
+        self.text_size = {
+            'width': 80,
+            'height': 3,
+        }
 
-class ComplaintTab(ConstructorTab):
+
+class ComplaintsTab(ConstructorTab):
     '''Вкладка с жалобами'''
 
     def __init__(self, note, margins):
@@ -22,9 +29,16 @@ class ComplaintTab(ConstructorTab):
         default_content += 'в правом подреберье отрицает.'
 
         # Поле ввода для жалоб
-        self.complaints = Text(self, width=83, height=3, wrap='word')
-        self.complaints.insert('1.0', default_content)
+        self.complaints = TextSpace(self)
+        self.complaints.config(**self.text_size)
         self.complaints.grid(row=0, column=1, **self.margins)
+
+        # Ввод и форматирование текста жалоб
+        text_handler = TextHandler(self.complaints)
+        text_handler.text_add(default_content, 'main')
+        text_handler.paragraphs_selector()
+
+        
         
 
 

@@ -1,7 +1,6 @@
 from tkinter import Tk, IntVar
 from tkinter import FALSE, EW, SUNKEN, W, NS
 from tkinter import ttk
-from tkinter.scrolledtext import ScrolledText
 from tkinter.messagebox import askyesnocancel
 from pathlib import Path
 
@@ -13,6 +12,7 @@ from menus import MainMenu, ContextMenu
 from button_functions.generator import Generator
 from button_functions.html_conventer import HTMLConventer
 from update import UpdateApp
+from forms.text_space import TextSpace
 
 
 class DnevnicApp(Tk):
@@ -84,32 +84,11 @@ class DnevnicApp(Tk):
         )
 
         # Область для работы с текстом
-        self.text = ScrolledText(self, width=110, wrap='word', undo=True)
+        self.text = TextSpace(self)
+        self.text.config(width=110)
         self.text.grid(
             row=0, column=2, rowspan=5, columnspan=3, pady=6, sticky=NS
         )
-        
-        # Установка шрифтов
-        self.text.tag_configure('main', font=self.settings.font_usual)
-        self.text.tag_configure(
-            'main_underlined', 
-            font=self.settings.font_usual_underlined
-        )
-        self.text.tag_configure('title', font='Times_New_Roman 12 bold')
-        self.text.tag_configure('subtitle', font=self.settings.font_bold)
-        self.text.tag_configure(
-            'subtitle_underlined', 
-            font=self.settings.font_bold_underlined
-        )
-        self.text.tag_configure(
-            'italic', 
-            font=self.settings.font_italic
-        )
-        self.text.tag_configure(
-            'italic_underlined', 
-            font=self.settings.font_italic_underlined
-        )
-        self.text.tag_configure('paragraph')
         
         # Установка событий нажатия клавиш
         self.text.bind(

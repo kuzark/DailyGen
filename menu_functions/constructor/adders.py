@@ -20,11 +20,10 @@ class Add:
         self.text_handler.text_add(content=content, tag='title')
     
 
-    def add_complaints(self, note):
+    def add_complaints(self, complaints_tab):
         '''Добавление жалоб'''
         # Получение содержимого вкладки "Жалобы"
-        complaint_tab = note.winfo_children()[0]
-        content= complaint_tab.complaints.get('1.0', 'end')
+        content = complaints_tab.complaints.get('1.0', 'end')
 
         # Добавление текста в текстовое поле
         self.text_handler.text_add(content=content, tag='main')
