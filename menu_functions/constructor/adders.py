@@ -19,7 +19,7 @@ class Add:
         content = self.day_tabs[index].day_dnevnic_type.get() + 2 * '\n'
         self.text_handler.text_add(content=content, tag='title')
     
-    
+
     def add_element(self, element_tab_text):
         '''Добавление элемента в основное текстовое поле'''
         # Получение содержимого вкладки
@@ -27,4 +27,26 @@ class Add:
 
         # Добавление текста в текстовое поле
         self.text_handler.text_add(content=content, tag='main')
+
+    
+    def add_doctor(self):
+        '''Добавление строки для подписи врача'''
+        # Формирование строки подписи
+        doc_sign = ' г. Врач-инфекционист:_____________________/'
+        boss_sign = 'Зав. отд.:_____________________/Кайкова О.В./'
+        content = '\n' + self.day_tabs[index].day_now_date.get() + doc_sign
+        content += self.day_tabs[index].day_selected_doctor.get() + '/' + '\n'
+        
+        # Получение индекса текущей вкладки дня
+        index = self.day_note_index
+        
+        # Добавление строки подписи заведующего при выборе
+        boss_chosen = self.day_tabs[index].boss_doctor_chosen.get()
+        if boss_chosen == 1:
+            content += '\n' + boss_sign + '\n'
+
+        # Добавление сформированной строки
+        self.text_handler.text_add(content=content, tag='main')
+
+
 

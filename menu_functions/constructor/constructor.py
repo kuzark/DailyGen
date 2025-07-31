@@ -135,6 +135,10 @@ class ConstructorWindow(Toplevel):
         if self.chosen_elements[4].get() == 1:
             self.add.add_element(self.diagnosis_tab.diagnosis)
         
+        # Добавление строки подписи врача
+        if self.chosen_elements[5].get() == 1:
+            self.add.add_doctor()
+        
         # Форматирование собранных элементов
         self.text_handler.paragraphs_selector()
 

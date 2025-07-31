@@ -205,10 +205,18 @@ class TabFrame(ttk.Frame):
             column=1,
             **notes_elem_grid
         )
+        self.boss_doctor_chosen = IntVar(value=0)
+        ttk.Checkbutton(
+            self,
+            text='C заведующим',
+            variable=self.boss_doctor_chosen
+        ).grid(
+            row=7, column=1, **notes_elem_grid
+        )
 
         # Интерфейс выбора даты
         ttk.Label(self, text='Дата:').grid(
-            row=7, column=0, **notes_elem_grid
+            row=8, column=0, **notes_elem_grid
         )
 
         now = datetime.today()
@@ -220,7 +228,7 @@ class TabFrame(ttk.Frame):
             width=18
         )
         self.day_date.grid(
-            row=7,
+            row=8,
             column=1,
             **notes_elem_grid
         )
