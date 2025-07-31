@@ -31,14 +31,14 @@ class Add:
     
     def add_doctor(self):
         '''Добавление строки для подписи врача'''
+        # Получение индекса текущей вкладки дня
+        index = self.day_note_index
+        
         # Формирование строки подписи
         doc_sign = ' г. Врач-инфекционист:_____________________/'
         boss_sign = 'Зав. отд.:_____________________/Кайкова О.В./'
         content = '\n' + self.day_tabs[index].day_now_date.get() + doc_sign
         content += self.day_tabs[index].day_selected_doctor.get() + '/' + '\n'
-        
-        # Получение индекса текущей вкладки дня
-        index = self.day_note_index
         
         # Добавление строки подписи заведующего при выборе
         boss_chosen = self.day_tabs[index].boss_doctor_chosen.get()
