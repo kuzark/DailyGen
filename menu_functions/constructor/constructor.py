@@ -19,7 +19,7 @@ class ConstructorWindow(Toplevel):
 
         # Настройки окна
         self.title('Конструктор')
-        self.geometry('705x500+831+285')
+        self.geometry('705x580+831+285')
         self.resizable(False, False)
 
         # Отступы
@@ -101,11 +101,11 @@ class ConstructorWindow(Toplevel):
         
         # Добавление жалоб
         if self.chosen_elements[1].get() == 1:
-            self.add.add_complaints(self.complaints_tab)
+            self.add.add_element(self.complaints_tab.complaints)
 
         # Добавление анамнеза
         if self.chosen_elements[2].get() == 1:
-            self.add.add_anamnesis(self.anamnesis_tab)
+            self.add.add_element(self.anamnesis_tab.anamnesis)
         
         # Форматирование собранных элементов
         self.text_handler.paragraphs_selector()

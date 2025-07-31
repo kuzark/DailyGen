@@ -124,7 +124,7 @@ class DnevnicApp(Tk):
 # Запуск цикла событий приложения
 if __name__ == '__main__':
     # Проверка наличия обновлений
-    UpdateApp()
+    #UpdateApp()
     # Запуск приложения
     app = DnevnicApp()
     app.mainloop()

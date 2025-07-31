@@ -19,20 +19,12 @@ class Add:
         content = self.day_tabs[index].day_dnevnic_type.get() + 2 * '\n'
         self.text_handler.text_add(content=content, tag='title')
     
-
-    def add_complaints(self, complaints_tab):
-        '''Добавление жалоб'''
-        # Получение содержимого вкладки "Жалобы"
-        content = complaints_tab.complaints.get('1.0', 'end')
-
-        # Добавление текста в текстовое поле
-        self.text_handler.text_add(content=content, tag='main')
-
     
-    def add_anamnesis(self, anamnesis_tab):
-        '''Добавление анамнеза'''
-        # Получение содержимого вкладки "Анамнез"
-        content = anamnesis_tab.anamnesis.get('1.0', 'end')
+    def add_element(self, element_tab_text):
+        '''Добавление элемента в основное текстовое поле'''
+        # Получение содержимого вкладки
+        content = element_tab_text.get('1.0', 'end')
 
         # Добавление текста в текстовое поле
         self.text_handler.text_add(content=content, tag='main')
+
