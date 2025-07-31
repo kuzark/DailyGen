@@ -31,6 +31,14 @@ class ConstructorTab(ttk.Frame):
         text_handler = TextHandler(text_space)
         text_handler.text_add(content, 'main')
         text_handler.paragraphs_selector()
+    
+
+    def add_custom_button(self, button_name):
+        '''Добавление кнопки для создания кастомного элемента'''
+        ttk.Button(
+            self, text=button_name).grid(
+                row=1, column=0, sticky=W, **self.margins
+            )
 
 
 class ComplaintsTab(ConstructorTab):
@@ -62,14 +70,11 @@ class AnamnesisTab(ConstructorTab):
         # Поле ввода для анамнеза
         self.anamnesis = self.text_space_create(self)
 
-        # Ввод и форматирование текста жалоб
+        # Ввод и форматирование текста анамнеза
         self.text_add(self.anamnesis, default_content)
 
         # Кнопка для составления кастомного анамнеза
-        ttk.Button(
-            self, text='Составить анамнез...').grid(
-                row=1, column=0, sticky=W, **self.margins
-            )
+        self.add_custom_button('Составить анамнез...')
 
 
 class ExaminationTab(ConstructorTab):
@@ -100,6 +105,14 @@ class ExaminationTab(ConstructorTab):
             'Отеков нет.\n'
         )
         
+        # Поле ввода для осмотра
+        self.examination = self.text_space_create(self)
+
+        # Ввод и форматирование текста осмотра
+        self.text_add(self.examination, default_content)
+
+        # Кнопка для составления кастомного осмотра
+        self.add_custom_button('Составить осмотр...')
 
         
 
