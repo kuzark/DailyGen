@@ -4,7 +4,6 @@ from tkinter.messagebox import showerror, askyesnocancel
 from ctypes import windll
 from menu_functions.font_changer import FontMenu
 from forms.day_params_form import TabsMenu
-from menu_functions.diagnosis import DiagnosisMenu
 from menu_functions.analysis import AnalysisMenu
 from menu_functions.constructor.constructor import ConstructorWindow
 
@@ -23,8 +22,6 @@ class MainMenu(Menu):
         self.add_cascade(label='Шрифт', menu=FontMenu(app.text))
         self.add_separator()
         self.add_cascade(label='Вкладки', menu=TabsMenu(app))
-        self.add_separator()
-        self.add_cascade(label='Диагноз', menu=DiagnosisMenu(app))
         self.add_separator()
         self.add_cascade(label='Анализы', menu=AnalysisMenu(app))
         self.add_separator()

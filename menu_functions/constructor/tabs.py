@@ -1,7 +1,8 @@
 from tkinter import ttk
-from tkinter import SUNKEN, W
+from tkinter import SUNKEN, W, E
 from forms.text_space import TextSpace
 from handlers.text_handler import TextHandler
+from settings import Settings
 
 
 class ConstructorTab(ttk.Frame):
@@ -10,6 +11,9 @@ class ConstructorTab(ttk.Frame):
         super().__init__(note, relief=SUNKEN)
         self.note = note
         self.margins = margins
+
+        # Инициализация настроек
+        self.settings = Settings()
 
         # Настройки текстового поля
         self.text_size = {
@@ -114,6 +118,47 @@ class ExaminationTab(ConstructorTab):
         # Кнопка для составления кастомного осмотра
         self.add_custom_button('Составить осмотр...')
 
+
+class DiagnosisTab(ConstructorTab):
+    '''Вкладка с диагнозом'''
+    def __init__(self, note, margins):
+        super().__init__(note, margins)
         
+        default_content = 'Диагноз:' + 2 * '\n'
+
+        # Поле ввода для диагноза
+        self.diagnosis = self.text_space_create(self)
+
+        # Ввод и форматирование текста диагноза
+        self.text_add(self.diagnosis, default_content)
+
+        # Кнопка для составления кастомного диагноза
+        self.add_custom_button('Составить диагноз...')
+
+        ttk.Label(self, text='Добавить:').grid(
+            row=1, column=0, sticky=E, **self.margins
+        )
+        
+        # Кнопка для добавления 1-го обоснования
+        ttk.Button(
+            self, 
+            text='1-ое обоснование',
+            command=lambda: self.text_add(
+                self.diagnosis, self.settings.diagnosis_arguments[0]
+            )
+        ).grid(
+            row=1, column=1, sticky=W, **self.margins
+            )
+        
+        # Кнопка для добавления 2-го обоснования
+        ttk.Button(
+            self, 
+            text='2-ое обоснование',
+            command=lambda: self.text_add(
+                self.diagnosis, self.settings.diagnosis_arguments[1]
+            )
+        ).grid(
+            row=1, column=1, sticky=E, **self.margins
+        )
 
 

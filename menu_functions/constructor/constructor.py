@@ -4,7 +4,7 @@ from tkinter import ttk
 from settings import Settings
 from menu_functions.constructor.adders import Add
 from menu_functions.constructor.tabs import (
-    ComplaintsTab, AnamnesisTab, ExaminationTab
+    ComplaintsTab, AnamnesisTab, ExaminationTab, DiagnosisTab
 )
 from handlers.text_handler import TextHandler
 
@@ -98,6 +98,15 @@ class ConstructorWindow(Toplevel):
 
         self.note.grid(row=2, sticky=EW, **self.margins)
 
+        # Добавление вкладки 'Диагноз'
+        if self.chosen_elements[4].get() == 1:
+            # Переменная для хранения вкладки с диагнозом
+            self.diagnosis_tab = DiagnosisTab(self.note, self.margins)
+            # Добавление вкладки в ноутбук
+            self.note.add(self.diagnosis_tab, text='Диагноз')
+
+        self.note.grid(row=2, sticky=EW, **self.margins)
+
         # Создание кнопки 'Добавить'
         ttk.Button(
             self, text='Добавить', command=self._add_elements
@@ -121,6 +130,10 @@ class ConstructorWindow(Toplevel):
         # Добавление осмотра
         if self.chosen_elements[3].get() == 1:
             self.add.add_element(self.examination_tab.examination)
+
+        # Добавление диагноза
+        if self.chosen_elements[4].get() == 1:
+            self.add.add_element(self.diagnosis_tab.diagnosis)
         
         # Форматирование собранных элементов
         self.text_handler.paragraphs_selector()
