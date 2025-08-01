@@ -4,7 +4,7 @@ from tkinter import ttk
 from settings import Settings
 from menu_functions.constructor.adders import Add
 from menu_functions.constructor.tabs import (
-    ComplaintsTab, AnamnesisTab, ExaminationTab, DiagnosisTab
+    ComplaintsTab, AnamnesisTab, ExaminationTab, DiagnosisTab, RecomendationsTab
 )
 from handlers.text_handler import TextHandler
 
@@ -18,10 +18,12 @@ class ConstructorWindow(Toplevel):
         self.add = Add(app)
         # Инициализация обработчика текста
         self.text_handler = TextHandler(app.text)
+        # Экземпляр приложения
+        self.app = app
 
         # Настройки окна
         self.title('Конструктор')
-        self.geometry('705x580+831+285')
+        self.geometry('705x600+831+285')
         self.resizable(False, False)
 
         # Отступы
@@ -35,6 +37,7 @@ class ConstructorWindow(Toplevel):
             'Анамнез',
             'Осмотр',
             'Диагноз',
+            'Рекомендации',
             'Дата и врач'
         ]
 
@@ -46,9 +49,9 @@ class ConstructorWindow(Toplevel):
         row = 0
         column = 0
         for element in structure_elements:
-            if row == 3: # Переход на следующую строку
+            if row == 3: # Переход на следующий столбик
                 row = 0
-                column = 1
+                column += 1
             
             # Создание переменных для хранения выбранных пользователем элементов
             self.chosen_elements.append(IntVar(value=0))
@@ -57,7 +60,7 @@ class ConstructorWindow(Toplevel):
             ttk.Checkbutton(
                 choose_structure_frame, 
                 text=element, 
-                width=50, 
+                width=31, 
                 variable=self.chosen_elements[-1]
             ).grid(row=row, column=column, sticky=W, **self.margins)
             row += 1
@@ -107,6 +110,17 @@ class ConstructorWindow(Toplevel):
 
         self.note.grid(row=2, sticky=EW, **self.margins)
 
+        # Добавление вкладки 'Рекомендации'
+        if self.chosen_elements[5].get() == 1:
+            # Переменная для хранения вкладки с рекомендациями
+            self.recomendations_tab = RecomendationsTab(
+                self.note, self.margins, self.app
+            )
+            # Добавление вкладки в ноутбук
+            self.note.add(self.recomendations_tab, text='Рекомендации')
+
+        self.note.grid(row=2, sticky=EW, **self.margins)
+
         # Создание кнопки 'Добавить'
         ttk.Button(
             self, text='Добавить', command=self._add_elements
@@ -134,9 +148,13 @@ class ConstructorWindow(Toplevel):
         # Добавление диагноза
         if self.chosen_elements[4].get() == 1:
             self.add.add_element(self.diagnosis_tab.diagnosis)
+
+        # Добавление рекомендаций
+        if self.chosen_elements[5].get() == 1:
+            self.add.add_element(self.recomendations_tab.recomendations)
         
         # Добавление строки подписи врача
-        if self.chosen_elements[5].get() == 1:
+        if self.chosen_elements[6].get() == 1:
             self.add.add_doctor()
         
         # Форматирование собранных элементов

@@ -1,8 +1,9 @@
-from tkinter import ttk
+from tkinter import ttk, StringVar, Text
 from tkinter import SUNKEN, W, E
 from forms.text_space import TextSpace
 from handlers.text_handler import TextHandler
 from settings import Settings
+from button_functions.generator import Generator
 
 
 class ConstructorTab(ttk.Frame):
@@ -57,6 +58,7 @@ class ComplaintsTab(ConstructorTab):
 
         # Поле ввода для жалоб
         self.complaints = self.text_space_create(self)
+        self.complaints.config(height=3)
 
         # Ввод и форматирование текста жалоб
         self.text_add(self.complaints, default_content)
@@ -86,28 +88,8 @@ class ExaminationTab(ConstructorTab):
     def __init__(self, note, margins):
         super().__init__(note, margins)
 
-        default_content = (
-            'Настоящее состояние: удовлетворительное.\n'
-            'Кожные покровы, склеры и видимые слизистые: '
-            'физиологической окраски, чистые.\n'
-            'Антропометрические данные: вес 63 кг, рост 164 см.\n'
-            'Дыхательная система: дыхание через нос свободное, ЧДД 17 в мин.'
-            'Грудная клетка соответствует конституции, равномерно участвует '
-            'в акте дыхания. Дыхание везикулярное. Хрипов аускультативно нет.\n'
-            'Сердечно-сосудистая система: тоны сердца '
-            'ясные, ритмичные. Шумов сердца нет.'
-            'Верхушечный толчок нормальный. ЧСС – 74/мин. Пульс – 74/мин. '
-            'Дефицита пульса нет. АД 120/80 мм. рт. ст.\n'
-            'Пищеварительная система: язык влажный, чистый. Живот не вздут, '
-            'симметричный, участвует в акте дыхания, мягкий, безболезненный '
-            'при пальпации. Печень по краю реберной дуги, селезенка не '
-            'пальпируется. Стул регулярный, оформленный, '
-            'без патологических примесей.\n'
-            'Мочевыделительная система: диурез со слов достаточный. '
-            'Симптом Пастернацкого отрицательный с обеих сторон. '
-            'Мочеиспускание не учащено, безболезненно, не затруднено. '
-            'Отеков нет.\n'
-        )
+        # Текст объективного осмотра
+        default_content = self.settings.examination
         
         # Поле ввода для осмотра
         self.examination = self.text_space_create(self)
@@ -119,6 +101,108 @@ class ExaminationTab(ConstructorTab):
         self.add_custom_button('Составить осмотр...')
 
 
+class RecomendationsTab(ConstructorTab):
+    '''Вкладка с рекомендациями'''
+    def __init__(self, note, margins, app):
+        super().__init__(note, margins)
+
+        # Выбранная схема лечения
+        self.treatment_chosen = app.treatment_form.treatment_var.get()
+        
+        # Поле ввода для рекомендаций
+        self.recomendations = self.text_space_create(self)
+        self.recomendations.config(height=13)
+
+        # Список типов рекомендаций
+        self.recomendations_types = [
+            'Рекомендации для дневника',
+            'Рекомендации при приеме пациента на ДС',
+            'Рекомендации при направлении на ДС'
+        ]
+
+        # Переменная для хранения выбранного типа рекомендаций
+        self.recomendations_type_chosen = StringVar(
+            value=self.recomendations_types[0]
+        )
+
+        # Интерфейс выбора рекомендаций
+        # Кнопки выбора типа рекомендаций
+        row = 1
+        for recomendations_type in self.recomendations_types:
+            ttk.Radiobutton(
+                self,
+                text=recomendations_type,
+                value=recomendations_type,
+                variable=self.recomendations_type_chosen,
+                command=lambda: self._content_create(app)
+            ).grid(
+                row=row, sticky=W, **self.margins
+            )
+            row += 2
+        
+        # Поле для ввода совместимых препаратов
+        ttk.Label(self, text=(
+            'Совместимые препараты (если отсутствуют, оставьте поле пустым):'
+        )).grid(
+            row=6, sticky=W, **self.margins
+        )
+        self.medicines = Text(self, width=83, height=3)
+        self.medicines.grid(row=7, **self.margins)
+
+        # Ввод и форматирование текста рекомендаций
+        self._content_create(app)
+        
+
+    def _content_create(self, app):
+        '''Создание и ввод строки рекомендаций'''
+        # Очистка текстового поля
+        self.recomendations.delete('1.0', 'end')
+
+        # Выбранный пользователем тип рекомендаций
+        recomendations_type = self.recomendations_type_chosen.get()
+        
+        # Формирование рекомендаций для дневника
+        if recomendations_type == self.recomendations_types[0]:
+            key = 'recomendation'
+            treatment = self.settings.treatment[self.treatment_chosen][key]
+            if self.treatment_chosen == 'Эпклюза + РБВ':
+                morning, evening = Generator(app).ribavirin_doses_calculate()
+                treatment = treatment.format(morning=morning, evening=evening)
+
+            content = '\nЛечение продолжить согласно листу назначений:\n'
+            content += treatment
+
+        # Формирование рекомендаций при приеме пациента на ДС
+        elif recomendations_type == self.recomendations_types[1]:
+            pass #отдельным окном
+
+        # Формирование рекомендаций при направлении на ДС
+        else:
+            key = 'week'
+            treatment = self.settings.treatment[self.treatment_chosen][key]
+            course = self.settings.treatment[self.treatment_chosen]['course']
+            recomendations = self.settings.recomendations_ambulance
+            medicines = self.medicines.get('1.0', 'end-1c')
+            content = '\nНазначения:\n'
+            
+            if medicines:
+                content += recomendations['begin']
+                content += recomendations['medicines'].format(
+                    medicines=medicines
+                )
+                content += recomendations['end'].format(
+                    treatment=treatment, weeks=course
+                )
+            else:
+                content += recomendations['begin']
+                content += recomendations['end'].format(
+                    treatment=treatment, weeks=course
+                )
+
+        # Ввод и форматирование текста рекомендаций
+        self.text_add(self.recomendations, content)
+
+
 class DiagnosisTab(ConstructorTab):
     '''Вкладка с диагнозом'''
     def __init__(self, note, margins):
@@ -128,6 +212,7 @@ class DiagnosisTab(ConstructorTab):
 
         # Поле ввода для диагноза
         self.diagnosis = self.text_space_create(self)
+        self.diagnosis.config(height=9)
 
         # Ввод и форматирование текста диагноза
         self.text_add(self.diagnosis, default_content)
