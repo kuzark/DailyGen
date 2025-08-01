@@ -35,6 +35,7 @@ class ConstructorWindow(Toplevel):
             'Заголовок',
             'Жалобы',
             'Анамнез',
+            'Строка недели',
             'Осмотр',
             'Диагноз',
             'Рекомендации',
@@ -93,7 +94,7 @@ class ConstructorWindow(Toplevel):
         self.note.grid(row=2, sticky=EW, **self.margins)
 
         # Добавление вкладки 'Осмотр'
-        if self.chosen_elements[3].get() == 1:
+        if self.chosen_elements[4].get() == 1:
             # Переменная для хранения вкладки с осмотром
             self.examination_tab = ExaminationTab(self.note, self.margins)
             # Добавление вкладки в ноутбук
@@ -102,7 +103,7 @@ class ConstructorWindow(Toplevel):
         self.note.grid(row=2, sticky=EW, **self.margins)
 
         # Добавление вкладки 'Диагноз'
-        if self.chosen_elements[4].get() == 1:
+        if self.chosen_elements[5].get() == 1:
             # Переменная для хранения вкладки с диагнозом
             self.diagnosis_tab = DiagnosisTab(self.note, self.margins)
             # Добавление вкладки в ноутбук
@@ -111,7 +112,7 @@ class ConstructorWindow(Toplevel):
         self.note.grid(row=2, sticky=EW, **self.margins)
 
         # Добавление вкладки 'Рекомендации'
-        if self.chosen_elements[5].get() == 1:
+        if self.chosen_elements[6].get() == 1:
             # Переменная для хранения вкладки с рекомендациями
             self.recomendations_tab = RecomendationsTab(
                 self.note, self.margins, self.app
@@ -141,20 +142,24 @@ class ConstructorWindow(Toplevel):
         if self.chosen_elements[2].get() == 1:
             self.add.add_element(self.anamnesis_tab.anamnesis)
 
-        # Добавление осмотра
+        # Добавление строки недели
         if self.chosen_elements[3].get() == 1:
+            self.add.add_week()
+
+        # Добавление осмотра
+        if self.chosen_elements[4].get() == 1:
             self.add.add_element(self.examination_tab.examination)
 
         # Добавление диагноза
-        if self.chosen_elements[4].get() == 1:
+        if self.chosen_elements[5].get() == 1:
             self.add.add_element(self.diagnosis_tab.diagnosis)
 
         # Добавление рекомендаций
-        if self.chosen_elements[5].get() == 1:
+        if self.chosen_elements[6].get() == 1:
             self.add.add_element(self.recomendations_tab.recomendations)
         
         # Добавление строки подписи врача
-        if self.chosen_elements[6].get() == 1:
+        if self.chosen_elements[7].get() == 1:
             self.add.add_doctor()
         
         # Форматирование собранных элементов
