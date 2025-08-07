@@ -1,5 +1,5 @@
 from tkinter import Toplevel, IntVar
-from tkinter import SUNKEN, EW, W
+from tkinter import SUNKEN, EW, W, S
 from tkinter import ttk
 from settings import Settings
 from menu_functions.constructor.adders import Add
@@ -30,39 +30,39 @@ class ConstructorWindow(Toplevel):
         settings = Settings()
         self.margins = settings.margins
 
-        # Список структурных элементов медицинских документов
-        structure_elements = [
-            'Заголовок',
-            'Жалобы',
-            'Анамнез',
-            'Строка недели',
-            'Осмотр',
-            'Диагноз',
-            'Рекомендации',
-            'Дата и врач'
-        ]
+        # Словарь структурных элементов медицинских документов
+        self.structure_elements = {
+            'Заголовок': None,
+            'Жалобы': ComplaintsTab,
+            'Анамнез': AnamnesisTab,
+            'Строка недели': None,
+            'Осмотр': ExaminationTab,
+            'Диагноз': DiagnosisTab,
+            'Рекомендации': RecomendationsTab,
+            'Дата и врач': None
+        }
 
-        # Список для хранения выбранных пользователем элементов
-        self.chosen_elements = []
+        # Список для хранения IntVar структурных элементов
+        self.element_intvars = []
 
         # Создание области выбора структурных элементов
         choose_structure_frame = ttk.Frame(self, relief=SUNKEN)
         row = 0
         column = 0
-        for element in structure_elements:
+        for element_name in self.structure_elements.keys():
             if row == 3: # Переход на следующий столбик
                 row = 0
                 column += 1
             
             # Создание переменных для хранения выбранных пользователем элементов
-            self.chosen_elements.append(IntVar(value=0))
+            self.element_intvars.append(IntVar(value=0))
 
             # Создание Чек-боксов
             ttk.Checkbutton(
                 choose_structure_frame, 
-                text=element, 
+                text=element_name, 
                 width=31, 
-                variable=self.chosen_elements[-1]
+                variable=self.element_intvars[-1]
             ).grid(row=row, column=column, sticky=W, **self.margins)
             row += 1
 
@@ -73,95 +73,73 @@ class ConstructorWindow(Toplevel):
             self, text='Сформировать', command=self._create_note
         ).grid(row=1)
 
+        # Создание ноутбука для вкладок
+        self.note = ttk.Notebook(self)
+
     
     def _create_note(self):
         '''Создает ноутбук с вкладками характеристик элементов'''
+        # Удаление ноутбука и создание заново
+        self.note.destroy()
         self.note = ttk.Notebook(self)
-        # Добавление вкладки 'Жалобы'
-        if self.chosen_elements[1].get() == 1:
-            # Переменная для хранения вкладки с жалобами
-            self.complaints_tab = ComplaintsTab(self.note, self.margins)
-            # Добавление вкладки в ноутбук
-            self.note.add(self.complaints_tab, text='Жалобы')
+        
+        # Список для хранения выбранных структурных элементов
+        self.chosen_elements = [] 
 
-        # Добавление вкладки 'Анамнез'
-        if self.chosen_elements[2].get() == 1:
-            # Переменная для хранения вкладки с анамнезом
-            self.anamnesis_tab = AnamnesisTab(self.note, self.margins)
-            # Добавление вкладки в ноутбук
-            self.note.add(self.anamnesis_tab, text='Анамнез')
+        # Добавление вкладок в ноутбук
+        for i, (element_name, element_class) in enumerate(
+            self.structure_elements.items()):
+            
+            # Проверка выбран ли структурный элемент пользователем
+            if not self.element_intvars[i].get():
+                continue
 
-        self.note.grid(row=2, sticky=EW, **self.margins)
+            if element_class:
+                # Создание экземпляра вкладки
+                element_tab = (
+                    element_class(self.note, self.margins, self.app)
+                    if element_name == 'Рекомендации'
+                    else element_class(self.note, self.margins)
+                )
+                
+                # Сохранение экземпляра в список
+                self.chosen_elements.append(element_tab)
+                
+                # Добавление вкладки в ноутбук
+                self.note.add(self.chosen_elements[-1], text=element_name)
+            else:
+                # Если нет вкладки для элемента добавляем имя элемента
+                self.chosen_elements.append(element_name)
 
-        # Добавление вкладки 'Осмотр'
-        if self.chosen_elements[4].get() == 1:
-            # Переменная для хранения вкладки с осмотром
-            self.examination_tab = ExaminationTab(self.note, self.margins)
-            # Добавление вкладки в ноутбук
-            self.note.add(self.examination_tab, text='Осмотр')
-
-        self.note.grid(row=2, sticky=EW, **self.margins)
-
-        # Добавление вкладки 'Диагноз'
-        if self.chosen_elements[5].get() == 1:
-            # Переменная для хранения вкладки с диагнозом
-            self.diagnosis_tab = DiagnosisTab(self.note, self.margins)
-            # Добавление вкладки в ноутбук
-            self.note.add(self.diagnosis_tab, text='Диагноз')
-
-        self.note.grid(row=2, sticky=EW, **self.margins)
-
-        # Добавление вкладки 'Рекомендации'
-        if self.chosen_elements[6].get() == 1:
-            # Переменная для хранения вкладки с рекомендациями
-            self.recomendations_tab = RecomendationsTab(
-                self.note, self.margins, self.app
-            )
-            # Добавление вкладки в ноутбук
-            self.note.add(self.recomendations_tab, text='Рекомендации')
-
-        self.note.grid(row=2, sticky=EW, **self.margins)
+        # Размещение ноутбука
+        if self.note.tabs():
+            self.note.grid(row=2, sticky=EW, **self.margins)
 
         # Создание кнопки 'Добавить'
         ttk.Button(
             self, text='Добавить', command=self._add_elements
-        ).grid(row=3)
+        ).grid(row=3, **self.margins)
 
     
     def _add_elements(self):
         '''Добавляет выбранные элементы медицинской документации'''
-        # Добавление заголовка
-        if self.chosen_elements[0].get() == 1:
-            self.add.add_title()
-        
-        # Добавление жалоб
-        if self.chosen_elements[1].get() == 1:
-            self.add.add_element(self.complaints_tab.complaints)
+        for chosen_element in self.chosen_elements:
+            # Добавление заголовка
+            if chosen_element == 'Заголовок':
+                self.add.add_title()
+            
+            # Добавление строки недели
+            elif chosen_element == 'Строка недели':
+                self.add.add_week()
+            
+            # Добавление строки подписи врача
+            elif chosen_element == 'Дата и врач':
+                self.add.add_doctor()
+            
+            # Добавление остальных элементов
+            else:
+                self.add.add_element(chosen_element.text)
 
-        # Добавление анамнеза
-        if self.chosen_elements[2].get() == 1:
-            self.add.add_element(self.anamnesis_tab.anamnesis)
-
-        # Добавление строки недели
-        if self.chosen_elements[3].get() == 1:
-            self.add.add_week()
-
-        # Добавление осмотра
-        if self.chosen_elements[4].get() == 1:
-            self.add.add_element(self.examination_tab.examination)
-
-        # Добавление диагноза
-        if self.chosen_elements[5].get() == 1:
-            self.add.add_element(self.diagnosis_tab.diagnosis)
-
-        # Добавление рекомендаций
-        if self.chosen_elements[6].get() == 1:
-            self.add.add_element(self.recomendations_tab.recomendations)
-        
-        # Добавление строки подписи врача
-        if self.chosen_elements[7].get() == 1:
-            self.add.add_doctor()
-        
         # Форматирование собранных элементов
         self.text_handler.paragraphs_selector()
 

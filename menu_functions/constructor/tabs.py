@@ -58,11 +58,11 @@ class ComplaintsTab(ConstructorTab):
         default_content += 'в правом подреберье отрицает.'
 
         # Поле ввода для жалоб
-        self.complaints = self.text_space_create(self)
-        self.complaints.config(height=3)
+        self.text = self.text_space_create(self)
+        self.text.config(height=3)
 
         # Ввод и форматирование текста жалоб
-        self.text_add(self.complaints, default_content)
+        self.text_add(self.text, default_content)
 
 
 class AnamnesisTab(ConstructorTab):
@@ -75,10 +75,10 @@ class AnamnesisTab(ConstructorTab):
         default_content += 'ознакомлен, дополнений нет.'
 
         # Поле ввода для анамнеза
-        self.anamnesis = self.text_space_create(self)
+        self.text = self.text_space_create(self)
 
         # Ввод и форматирование текста анамнеза
-        self.text_add(self.anamnesis, default_content)
+        self.text_add(self.text, default_content)
 
         # Кнопка для составления кастомного анамнеза
         self.add_custom_button('Составить анамнез...')
@@ -93,10 +93,10 @@ class ExaminationTab(ConstructorTab):
         default_content = self.settings.examination
         
         # Поле ввода для осмотра
-        self.examination = self.text_space_create(self)
+        self.text = self.text_space_create(self)
 
         # Ввод и форматирование текста осмотра
-        self.text_add(self.examination, default_content)
+        self.text_add(self.text, default_content)
 
         # Кнопка для составления кастомного осмотра
         self.add_custom_button('Составить осмотр...')
@@ -111,8 +111,8 @@ class RecomendationsTab(ConstructorTab):
         self.treatment_chosen = app.treatment_form.treatment_var.get()
         
         # Поле ввода для рекомендаций
-        self.recomendations = self.text_space_create(self)
-        self.recomendations.config(height=13)
+        self.text = self.text_space_create(self)
+        self.text.config(height=13)
 
         # Список типов рекомендаций
         self.recomendations_types = [
@@ -184,7 +184,7 @@ class RecomendationsTab(ConstructorTab):
             treatment = treatment.format(morning=morning, evening=evening)
         
         # Очистка текстового поля
-        self.recomendations.delete('1.0', 'end')
+        self.text.delete('1.0', 'end')
 
         # Выбранный пользователем тип рекомендаций
         recomendations_type = self.recomendations_type_chosen.get()
@@ -230,7 +230,7 @@ class RecomendationsTab(ConstructorTab):
                 )
 
         # Ввод и форматирование текста рекомендаций
-        self.text_add(self.recomendations, content)
+        self.text_add(self.text, content)
 
 
 class DiagnosisTab(ConstructorTab):
@@ -241,11 +241,11 @@ class DiagnosisTab(ConstructorTab):
         default_content = 'Диагноз:' + 2 * '\n'
 
         # Поле ввода для диагноза
-        self.diagnosis = self.text_space_create(self)
-        self.diagnosis.config(height=9)
+        self.text = self.text_space_create(self)
+        self.text.config(height=9)
 
         # Ввод и форматирование текста диагноза
-        self.text_add(self.diagnosis, default_content)
+        self.text_add(self.text, default_content)
 
         # Кнопка для составления кастомного диагноза
         self.add_custom_button('Составить диагноз...')
@@ -259,7 +259,7 @@ class DiagnosisTab(ConstructorTab):
             self, 
             text='1-ое обоснование',
             command=lambda: self.text_add(
-                self.diagnosis, self.settings.diagnosis_arguments[0]
+                self.text, self.settings.diagnosis_arguments[0]
             )
         ).grid(
             row=1, column=1, sticky=W, **self.margins
@@ -270,7 +270,7 @@ class DiagnosisTab(ConstructorTab):
             self, 
             text='2-ое обоснование',
             command=lambda: self.text_add(
-                self.diagnosis, self.settings.diagnosis_arguments[1]
+                self.text, self.settings.diagnosis_arguments[1]
             )
         ).grid(
             row=1, column=1, sticky=E, **self.margins
