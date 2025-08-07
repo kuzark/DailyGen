@@ -1,5 +1,6 @@
-from tkinter import ttk, StringVar, Text
+from tkinter import ttk, StringVar, IntVar, Text
 from tkinter import SUNKEN, W, E
+from datetime import datetime
 from forms.text_space import TextSpace
 from handlers.text_handler import TextHandler
 from settings import Settings
@@ -136,10 +137,28 @@ class RecomendationsTab(ConstructorTab):
                 variable=self.recomendations_type_chosen,
                 command=lambda: self._content_create(app)
             ).grid(
-                row=row, sticky=W, **self.margins
+                row=row, sticky=W, columnspan=2, **self.margins
             )
             row += 2
         
+        # Интерфейс с характеристиками рекомендаций при приеме на ДС
+        ttk.Label(self, text='Дата ВК:').grid(
+            row=4, column=0, sticky=W, **self.margins
+        )
+
+        # Дата врачебной коммиссии
+        now = datetime.today()
+        self.date_med_commission = StringVar(value=now.strftime('%d.%m.%y'))
+        ttk.Entry(self, textvariable=self.date_med_commission, width=7).grid(
+            row=4, column=0, **self.margins
+        )
+
+        # Чек-бокс на наличие цирроза
+        self.cirrhosis = IntVar(value=0)
+        ttk.Checkbutton(self, text='Цирроз', variable=self.cirrhosis).grid(
+            row=4, column=1, sticky=W, **self.margins
+        )
+
         # Поле для ввода совместимых препаратов
         ttk.Label(self, text=(
             'Совместимые препараты (если отсутствуют, оставьте поле пустым):'
@@ -147,7 +166,7 @@ class RecomendationsTab(ConstructorTab):
             row=6, sticky=W, **self.margins
         )
         self.medicines = Text(self, width=83, height=3)
-        self.medicines.grid(row=7, **self.margins)
+        self.medicines.grid(row=7, columnspan=2, **self.margins)
 
         # Ввод и форматирование текста рекомендаций
         self._content_create(app)

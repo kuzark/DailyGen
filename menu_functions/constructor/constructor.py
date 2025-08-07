@@ -23,7 +23,7 @@ class ConstructorWindow(Toplevel):
 
         # Настройки окна
         self.title('Конструктор')
-        self.geometry('705x600+831+285')
+        self.geometry('705x650+607+215')
         self.resizable(False, False)
 
         # Отступы

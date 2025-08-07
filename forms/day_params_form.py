@@ -225,7 +225,7 @@ class TabFrame(ttk.Frame):
         self.day_date = ttk.Entry(
             self,
             textvariable=self.day_now_date,
-            width=18
+            width=7
         )
         self.day_date.grid(
             row=8,
