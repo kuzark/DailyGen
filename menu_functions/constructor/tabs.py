@@ -193,7 +193,25 @@ class RecomendationsTab(ConstructorTab):
 
         # Формирование рекомендаций при приеме пациента на ДС
         elif recomendations_type == self.recomendations_types[1]:
-            pass #отдельным окном
+            date = self.date_med_commission.get()
+            scheme = self.settings.treatment[self.treatment_chosen]['week']
+            course = self.settings.treatment[self.treatment_chosen]['course']
+            key = 'recomendation'
+            treatment = self.settings.treatment[self.treatment_chosen][key]
+            if self.treatment_chosen == 'Эпклюза + РБВ':
+                morning, evening = Generator(app).ribavirin_doses_calculate()
+                treatment = treatment.format(morning=morning, evening=evening)
+            recomendations = self.settings.recomendations_admission
+            
+            content = '\nРекомендации:\n'
+            content += recomendations['begin'].format(
+                date=date, scheme=scheme, course=course
+            )
+            if self.cirrhosis.get() == 1:
+                content += recomendations['coagulogram']
+            content += recomendations['end'].format(
+                treatment=treatment
+            )
 
         # Формирование рекомендаций при направлении на ДС
         else:
