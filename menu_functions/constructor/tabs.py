@@ -174,6 +174,15 @@ class RecomendationsTab(ConstructorTab):
 
     def _content_create(self, app):
         '''Создание и ввод строки рекомендаций'''
+        # Получение выбранной схемы лечения
+        scheme = self.settings.treatment[self.treatment_chosen]['week']
+        course = self.settings.treatment[self.treatment_chosen]['course']
+        key = 'recomendation'
+        treatment = self.settings.treatment[self.treatment_chosen][key]
+        if self.treatment_chosen == 'Эпклюза + РБВ':
+            morning, evening = Generator(app).ribavirin_doses_calculate()
+            treatment = treatment.format(morning=morning, evening=evening)
+        
         # Очистка текстового поля
         self.recomendations.delete('1.0', 'end')
 
@@ -182,30 +191,17 @@ class RecomendationsTab(ConstructorTab):
         
         # Формирование рекомендаций для дневника
         if recomendations_type == self.recomendations_types[0]:
-            key = 'recomendation'
-            treatment = self.settings.treatment[self.treatment_chosen][key]
-            if self.treatment_chosen == 'Эпклюза + РБВ':
-                morning, evening = Generator(app).ribavirin_doses_calculate()
-                treatment = treatment.format(morning=morning, evening=evening)
-
             content = '\nЛечение продолжить согласно листу назначений:\n'
             content += treatment
 
         # Формирование рекомендаций при приеме пациента на ДС
         elif recomendations_type == self.recomendations_types[1]:
             date = self.date_med_commission.get()
-            scheme = self.settings.treatment[self.treatment_chosen]['week']
-            course = self.settings.treatment[self.treatment_chosen]['course']
-            key = 'recomendation'
-            treatment = self.settings.treatment[self.treatment_chosen][key]
-            if self.treatment_chosen == 'Эпклюза + РБВ':
-                morning, evening = Generator(app).ribavirin_doses_calculate()
-                treatment = treatment.format(morning=morning, evening=evening)
             recomendations = self.settings.recomendations_admission
             
             content = '\nРекомендации:\n'
             content += recomendations['begin'].format(
-                date=date, scheme=scheme, course=course
+                date=date, scheme=scheme[:-2], course=course
             )
             if self.cirrhosis.get() == 1:
                 content += recomendations['coagulogram']
@@ -215,9 +211,6 @@ class RecomendationsTab(ConstructorTab):
 
         # Формирование рекомендаций при направлении на ДС
         else:
-            key = 'week'
-            treatment = self.settings.treatment[self.treatment_chosen][key]
-            course = self.settings.treatment[self.treatment_chosen]['course']
             recomendations = self.settings.recomendations_ambulance
             medicines = self.medicines.get('1.0', 'end-1c')
             content = '\nНазначения:\n'
@@ -228,12 +221,12 @@ class RecomendationsTab(ConstructorTab):
                     medicines=medicines
                 )
                 content += recomendations['end'].format(
-                    treatment=treatment, weeks=course
+                    treatment=scheme, weeks=course
                 )
             else:
                 content += recomendations['begin']
                 content += recomendations['end'].format(
-                    treatment=treatment, weeks=course
+                    treatment=scheme, weeks=course
                 )
 
         # Ввод и форматирование текста рекомендаций
