@@ -3,6 +3,7 @@ from tkinter import SUNKEN, W, E
 from datetime import datetime
 from forms.text_space import TextSpace
 from handlers.text_handler import TextHandler
+from handlers import validators as valid
 from settings import Settings
 from button_functions.generator import Generator
 
@@ -196,7 +197,11 @@ class RecomendationsTab(ConstructorTab):
 
         # Формирование рекомендаций при приеме пациента на ДС
         elif recomendations_type == self.recomendations_types[1]:
+            # Получение и валидация даты
             date = self.date_med_commission.get()
+            if not valid.validate_date(date):
+                return
+
             recomendations = self.settings.recomendations_admission
             
             content = '\nРекомендации:\n'

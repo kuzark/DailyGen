@@ -2,6 +2,7 @@ import random
 import re
 from settings import Settings
 from handlers.text_handler import TextHandler
+from handlers import validators as valid
 
 class Generator:
     '''Класс для генерации дневника'''
@@ -198,12 +199,15 @@ class Generator:
 
     def _generate_signature(self):
         '''Генерация строки для подписи врача'''
+        # Получение и валидация даты
+        date = self.tabs[self.note_index].day_now_date.get()
+        if not valid.validate_date(date):
+            return
         # Замена даты
         if self.dnevnic.find('Врач-инфекционист') != -1:
             idx = self.dnevnic.find('Врач-инфекционист')
             self.dnevnic = self.dnevnic.replace(
-                self.dnevnic[idx - 12:idx - 4], 
-                self.tabs[self.note_index].day_now_date.get(), 1
+                self.dnevnic[idx - 12:idx - 4], date, 1
             )
 
         # Замена ФИО врача

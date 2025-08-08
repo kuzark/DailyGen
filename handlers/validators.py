@@ -1,4 +1,6 @@
 '''Модуль с функциями для валидации данных'''
+import re
+from tkinter.messagebox import showerror
 
 def validate_float(s):
         '''Валидация вводимых значений на соответствие 
@@ -27,3 +29,17 @@ def validate_nulls(s):
     '''Функция проверки на наличие нуля'''
     null_vars = ['0', '0.0', '0,0']
     return s in null_vars
+
+
+def validate_date(date):
+    '''Функция для проверки корректности даты'''
+    date_pattern = r'^\d{2}\.\d{2}\.\d{2}$'
+    if re.fullmatch(date_pattern, date):
+        return True
+    else:
+        showerror(
+            title='Некорректный формат даты', 
+            message='Правильный формат даты: "ДД.ММ.ГГ"'
+        )
+        return False
+        

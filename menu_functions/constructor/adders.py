@@ -1,4 +1,5 @@
 from handlers.text_handler import TextHandler
+from handlers import validators as valid
 from settings import Settings
 
 class Add:
@@ -57,11 +58,16 @@ class Add:
         '''Добавление строки для подписи врача'''
         # Получение индекса текущей вкладки дня
         index = self.day_note_index
+
+        # Получение и валидация даты
+        date = self.day_tabs[index].day_now_date.get()
+        if not valid.validate_date(date):
+            return
         
         # Формирование строки подписи
         doc_sign = ' г. Врач-инфекционист:_____________________/'
         boss_sign = 'Зав. отд.:_____________________/Кайкова О.В./'
-        content = '\n' + self.day_tabs[index].day_now_date.get() + doc_sign
+        content = '\n' + date + doc_sign
         content += self.day_tabs[index].day_selected_doctor.get() + '/' + '\n'
         
         # Добавление строки подписи заведующего при выборе
