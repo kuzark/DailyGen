@@ -7,7 +7,7 @@ class UpdateApp:
     '''Класс для проверки обновлениий приложения'''
     def __init__(self):
         # Текущая версия
-        self.current_version = 'v0.2.0'
+        self.current_version = 'v1.0.0'
         
         # Ссылка на страницу с релизами
         self.releases_url = 'https://api.github.com/repos/'
