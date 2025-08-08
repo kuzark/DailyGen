@@ -5,7 +5,7 @@ from forms.text_space import TextSpace
 from handlers.text_handler import TextHandler
 from handlers import validators as valid
 from settings import Settings
-from button_functions.generator import Generator
+from button_functions.generator import ribavirin_doses_calculate
 
 
 class ConstructorTab(ttk.Frame):
@@ -181,7 +181,7 @@ class RecomendationsTab(ConstructorTab):
         key = 'recomendation'
         treatment = self.settings.treatment[self.treatment_chosen][key]
         if self.treatment_chosen == 'Эпклюза + РБВ':
-            morning, evening = Generator(app).ribavirin_doses_calculate()
+            morning, evening = ribavirin_doses_calculate(app)
             treatment = treatment.format(morning=morning, evening=evening)
         
         # Очистка текстового поля

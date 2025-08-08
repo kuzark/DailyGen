@@ -7,6 +7,8 @@ from handlers import validators as valid
 class Generator:
     '''Класс для генерации дневника'''
     def __init__(self, app):
+        # Экземпляр приложения
+        self.app = app
         # Список вкладок
         self.tabs = app.notebook.tab_frames
         # Индекс текущей вкладки
@@ -164,7 +166,7 @@ class Generator:
         
         # Если выбрана схема лечения Эпклюза + РБВ
         if self.chosen_treatment == 'Эпклюза + РБВ':
-            morning, evening = self.ribavirin_doses_calculate()
+            morning, evening = ribavirin_doses_calculate(self.app)
             new_scheme = new_scheme.format(morning=morning, evening=evening)
         
         # Запуск цикла перебора схем лечения
@@ -187,14 +189,6 @@ class Generator:
             '',
             self.dnevnic
         )
-
-
-    def ribavirin_doses_calculate(self):
-        '''Расчитывает утреннюю и вечернюю дозу Рибавирина'''
-        capsuls = self.treatment_form.ribavirin_count.get()
-        morning = capsuls // 2
-        evening = morning + capsuls % 2
-        return morning, evening
 
 
     def _generate_signature(self):
@@ -220,3 +214,11 @@ class Generator:
 
         # Добавление пустых строк в конец
         self.dnevnic = self.dnevnic + 2 * '\n'
+
+
+def ribavirin_doses_calculate(app):
+    '''Расчитывает утреннюю и вечернюю дозу Рибавирина (вне класса)'''
+    capsuls = app.treatment_form.ribavirin_count.get()
+    morning = capsuls // 2
+    evening = morning + capsuls % 2
+    return morning, evening
