@@ -1,5 +1,5 @@
 from tkinter import Tk, IntVar
-from tkinter import FALSE, EW, SUNKEN, W, NS
+from tkinter import FALSE, EW, SUNKEN, W, NS, E
 from tkinter import ttk
 from tkinter.messagebox import askyesnocancel
 from pathlib import Path
@@ -13,6 +13,7 @@ from button_functions.generator import Generator
 from button_functions.html_conventer import HTMLConventer
 from update import UpdateApp
 from forms.text_space import TextSpace
+from handlers.text_handler import TextHandler
 
 
 class DnevnicApp(Tk):
@@ -87,7 +88,7 @@ class DnevnicApp(Tk):
         self.text = TextSpace(self)
         self.text.config(width=110)
         self.text.grid(
-            row=0, column=2, rowspan=5, columnspan=3, pady=6, sticky=NS
+            row=0, column=2, rowspan=4, columnspan=3, pady=6, sticky=NS
         )
         
         # Установка событий нажатия клавиш
@@ -99,6 +100,13 @@ class DnevnicApp(Tk):
             '<Button-3>', 
             lambda event: self.context_menu.post(event.x_root, event.y_root)
         )
+
+        # Кнопка для сокращения пропусков строк
+        ttk.Button(
+            self, 
+            text='Сократить пропуски строк',
+            command= lambda: TextHandler(self.text).empty_strings_cutter()
+        ).grid(row=4, column=4, sticky=E, **self.settings.margins)
 
         # Форма выбора схемы лечения
         self.treatment_form = TreatmentForm(self)
