@@ -6,6 +6,7 @@ from menu_functions.font_changer import FontMenu
 from forms.day_params_form import TabsMenu
 from menu_functions.analysis import AnalysisMenu
 from menu_functions.constructor.constructor import ConstructorWindow
+from menu_functions.templates import TemplatesMenu
 
 
 class MainMenu(Menu):
@@ -30,7 +31,7 @@ class MainMenu(Menu):
             command= lambda: ConstructorWindow(app)
         )
         self.add_separator()
-        self.add_cascade(label='Шаблоны')
+        self.add_cascade(label='Шаблоны', menu=TemplatesMenu(app))
 
 
     def _clear_all(self):

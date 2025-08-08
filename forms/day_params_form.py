@@ -100,6 +100,19 @@ class TabFrame(ttk.Frame):
         self.day_dnevnic_type = StringVar(
             value='Ежедневный осмотр врача-инфекциониста'
         )
+
+        ttk.Radiobutton(
+            self,
+            text='Прием врача-инфекциониста первичный',
+            value='Прием врача-инфекциониста первичный',
+            variable=self.day_dnevnic_type,
+            command=lambda: notebook.daily_dnevnic_btn_clicked()
+        ).grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            **notes_elem_grid
+        )
         
         ttk.Radiobutton(
             self,
@@ -108,7 +121,7 @@ class TabFrame(ttk.Frame):
             variable=self.day_dnevnic_type,
             command=lambda: notebook.daily_dnevnic_btn_clicked()
         ).grid(
-            row=0,
+            row=1,
             column=0,
             columnspan=2,
             **notes_elem_grid
@@ -121,22 +134,22 @@ class TabFrame(ttk.Frame):
             variable=self.day_dnevnic_type,
             command=lambda: notebook.duty_dnevnic_btn_clicked()
         ).grid(
-            row=1,
+            row=2,
             column=0,
             columnspan=2,
             **notes_elem_grid
         )
 
-        long_str = 'Совместный осмотр врача-инфекциониста '
-        long_str += 'с заведующим отделения'
+        self.supervisor_title = 'Совместный осмотр врача-инфекциониста '
+        self.supervisor_title += 'с заведующим отделения'
         ttk.Radiobutton(
             self,
             text='Совместный осмотр с заведующим',
-            value=long_str,
+            value=self.supervisor_title,
             variable=self.day_dnevnic_type,
             command=lambda: notebook.daily_dnevnic_btn_clicked()
         ).grid(
-            row=2,
+            row=3,
             column=0,
             columnspan=2,
             **notes_elem_grid
@@ -148,7 +161,7 @@ class TabFrame(ttk.Frame):
             value='',
             variable=self.day_dnevnic_type,
         ).grid(
-            row=3,
+            row=4,
             column=0,
             columnspan=2,
             **notes_elem_grid
@@ -156,7 +169,7 @@ class TabFrame(ttk.Frame):
 
         # Интерфейс выбора периода недели
         ttk.Label(self, text='Период недели:', width=26).grid(
-            row=4, column=0, **notes_elem_grid
+            row=5, column=0, **notes_elem_grid
         )
 
         self.periods = ['Начало', 'Продолжение', 'Завершение']
@@ -167,11 +180,11 @@ class TabFrame(ttk.Frame):
             state='readonly',
             textvariable=self.day_week_period,
             width=15
-        ).grid(row=4, column=1, **notes_elem_grid)
+        ).grid(row=5, column=1, **notes_elem_grid)
 
         # Интерфейс выбора номера недели
         ttk.Label(self, text='Номер недели:').grid(
-            row=5, column=0, **notes_elem_grid
+            row=6, column=0, **notes_elem_grid
         )
 
         self.day_week_num = IntVar(value=1)
@@ -182,12 +195,12 @@ class TabFrame(ttk.Frame):
             textvariable=self.day_week_num,
             width=3,
             state='readonly'
-        ).grid(row=5, column=1, **notes_elem_grid)
+        ).grid(row=6, column=1, **notes_elem_grid)
         
         # Интерфейс выбора врача
         self.day_doctor_label = ttk.Label(self, text='Врач:')
         self.day_doctor_label.grid(
-            row=6,
+            row=7,
             column=0,
             **notes_elem_grid
         )
@@ -201,7 +214,7 @@ class TabFrame(ttk.Frame):
             state='readonly'
         )
         self.day_doctors_box.grid(
-            row=6,
+            row=7,
             column=1,
             **notes_elem_grid
         )
@@ -211,12 +224,12 @@ class TabFrame(ttk.Frame):
             text='C заведующим',
             variable=self.boss_doctor_chosen
         ).grid(
-            row=7, column=1, **notes_elem_grid
+            row=8, column=1, **notes_elem_grid
         )
 
         # Интерфейс выбора даты
         ttk.Label(self, text='Дата:').grid(
-            row=8, column=0, **notes_elem_grid
+            row=9, column=0, **notes_elem_grid
         )
 
         now = datetime.today()
@@ -228,7 +241,7 @@ class TabFrame(ttk.Frame):
             width=7
         )
         self.day_date.grid(
-            row=8,
+            row=9,
             column=1,
             **notes_elem_grid
         )

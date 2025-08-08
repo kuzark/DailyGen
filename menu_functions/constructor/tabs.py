@@ -263,7 +263,7 @@ class DiagnosisTab(ConstructorTab):
             )
         ).grid(
             row=1, column=1, sticky=W, **self.margins
-            )
+        )
         
         # Кнопка для добавления 2-го обоснования
         ttk.Button(
